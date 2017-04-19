@@ -9,5 +9,6 @@ public enum SONG_FORMAT {
     MP3,
     MP4,
     MKV,
-    AVI
+    AVI,
+    VOB
 }

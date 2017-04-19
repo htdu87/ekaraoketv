@@ -1,7 +1,9 @@
 package info.ekaraoke.karaoketv.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BrowseFragment;
 
@@ -11,6 +13,7 @@ import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
+import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
@@ -22,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import info.ekaraoke.karaoketv.R;
+import info.ekaraoke.karaoketv.activity.SingActivity;
 import info.ekaraoke.karaoketv.cls.CardPresenter;
 import info.ekaraoke.karaoketv.cls.SimpleBackgroundManager;
 import info.ekaraoke.karaoketv.cls.Song;
@@ -31,7 +35,7 @@ import info.ekaraoke.karaoketv.utils.SONG_FORMAT;
  * Created by PCNTT on 04/16/2017.
  */
 
-public class MainFragment extends BrowseFragment implements OnItemViewSelectedListener {
+public class MainFragment extends BrowseFragment implements OnItemViewSelectedListener, OnItemViewClickedListener {
     private static final int GRID_ITEM_WIDTH = 300;
     private static final int GRID_ITEM_HEIGHT = 200;
     private SimpleBackgroundManager simpleBackgroundManager;
@@ -46,6 +50,7 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
         simpleBackgroundManager=new SimpleBackgroundManager(getActivity());
         simpleBackgroundManager.clearBackground();
         setOnItemViewSelectedListener(this);
+        setOnItemViewClickedListener(this);
     }
 
     private void setupUIElement(){
@@ -57,6 +62,9 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
     }
 
     private void loadRows(){
+        String path1 = Environment.getExternalStorageDirectory().getPath()+"/Nhu-Quynh-Con-Thuong-Rau-Dang-Moc-Sau-He.vob";
+        String path2 = Environment.getExternalStorageDirectory().getPath()+"/Che-Linh-Ke-O-Mien-Xa.vob";
+
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         HeaderItem gridItemPresenterHeader = new HeaderItem(0,"GridItemPresenter");
         GridItemPresenter mGirdPresenter = new GridItemPresenter();
@@ -69,9 +77,9 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
         HeaderItem cardItemPresenterHeader = new HeaderItem(1,"CardPresenter");
         CardPresenter mCardPresenter = new CardPresenter();
         ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(mCardPresenter);
-        cardRowAdapter.add(new Song(0,"Chú ếch con","Có chú là chú ếch con có hai là hai...", SONG_FORMAT.MID));
-        cardRowAdapter.add(new Song(1,"Con heo đất","Mẹ mua cho con heo đất í a í a...", SONG_FORMAT.MID));
-        cardRowAdapter.add(new Song(2,"Cả nhà thương nhau","Cha thương con vì con giống mẹ...", SONG_FORMAT.MID));
+        cardRowAdapter.add(new Song(0,"Còn thương rau đắng mọc sau hè","Nắng hạ đi mây trôi lang thang cho hạ...",path1, SONG_FORMAT.VOB));
+        cardRowAdapter.add(new Song(1,"Kẻ ở miền xa","Tôi ở miền xa trời quen đất lạ nhiều đông lắm hạ...",path2, SONG_FORMAT.VOB));
+        cardRowAdapter.add(new Song(2,"Cả nhà thương nhau","Cha thương con vì con giống mẹ...","", SONG_FORMAT.MID));
         mRowsAdapter.add(new ListRow(cardItemPresenterHeader,cardRowAdapter));
 
         setAdapter(mRowsAdapter);
@@ -104,10 +112,20 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
 
     @Override
     public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-        if (item instanceof String) { // GridItemPresenter row
+        /*if (item instanceof String) { // GridItemPresenter row
             simpleBackgroundManager.clearBackground();
         } else if (item instanceof Song) { // CardPresenter row
             simpleBackgroundManager.updateBackground(getActivity().getDrawable(R.drawable.grid_bg));
+        }*/
+    }
+
+    @Override
+    public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+        if(item instanceof Song){
+            Song song = (Song) item;
+            Intent intent = new Intent(getActivity(), SingActivity.class);
+            intent.putExtra("SONG2SING",song);
+            startActivity(intent);
         }
     }
 }
