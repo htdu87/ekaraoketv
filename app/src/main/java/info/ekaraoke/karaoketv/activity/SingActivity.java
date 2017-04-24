@@ -80,7 +80,6 @@ public class SingActivity extends Activity implements IVLCVout.Callback {
 
         Media media = new Media(libVLC, song.getPath());
         mediaPlayer.setMedia(media);
-        media.release();
         mediaPlayer.play();
 
         if (onLayoutChangeListener == null) {
@@ -245,5 +244,23 @@ public class SingActivity extends Activity implements IVLCVout.Callback {
             subtitlesSurface.invalidate();
     }
 
+    public void btnClick(View v){
+        int count = mediaPlayer.getAudioTracksCount();
+        int curr = mediaPlayer.getAudioTrack();
+        Log.d("htdu87","Audio track count: "+count);
+        Log.d("htdu87","Current audio track: "+curr);
 
+        if(curr+1<count)
+            mediaPlayer.setAudioTrack(curr+1);
+        else
+            mediaPlayer.setAudioTrack(1);
+
+        Log.d("htdu87","-----------------------");
+        Log.d("htdu87","Current audio track: "+mediaPlayer.getAudioTrack());
+
+        /*for (MediaPlayer.TrackDescription audioTrack : mediaPlayer.getAudioTracks()) {
+            Log.d("htdu87", "Audio track name: "+audioTrack.name);
+            Log.d("htdu87", "Audio track ID: "+audioTrack.id);
+        }*/
+    }
 }

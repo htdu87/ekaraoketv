@@ -64,6 +64,7 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
     private void loadRows(){
         String path1 = Environment.getExternalStorageDirectory().getPath()+"/Nhu-Quynh-Con-Thuong-Rau-Dang-Moc-Sau-He.vob";
         String path2 = Environment.getExternalStorageDirectory().getPath()+"/Che-Linh-Ke-O-Mien-Xa.vob";
+        String path3 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/5. Còn Thương Rau Đăng Mọc Sau Hè - Như Quỳnh.vob";
 
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         HeaderItem gridItemPresenterHeader = new HeaderItem(0,"GridItemPresenter");
@@ -79,7 +80,7 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
         ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(mCardPresenter);
         cardRowAdapter.add(new Song(0,"Còn thương rau đắng mọc sau hè","Nắng hạ đi mây trôi lang thang cho hạ...",path1, SONG_FORMAT.VOB));
         cardRowAdapter.add(new Song(1,"Kẻ ở miền xa","Tôi ở miền xa trời quen đất lạ nhiều đông lắm hạ...",path2, SONG_FORMAT.VOB));
-        cardRowAdapter.add(new Song(2,"Cả nhà thương nhau","Cha thương con vì con giống mẹ...","", SONG_FORMAT.MID));
+        cardRowAdapter.add(new Song(2,"Cả nhà thương nhau","Cha thương con vì con giống mẹ...",path3, SONG_FORMAT.MID));
         mRowsAdapter.add(new ListRow(cardItemPresenterHeader,cardRowAdapter));
 
         setAdapter(mRowsAdapter);
