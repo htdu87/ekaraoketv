@@ -2,6 +2,7 @@ package info.ekaraoke.karaoketv.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -80,22 +81,37 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
         CardPresenter mCardPresenter = new CardPresenter();
         ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(mCardPresenter);
 
+        String sdcardState = Environment.getExternalStorageState();
         int count = 0;
-        File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/karaoke");
-        if (f.exists()) {
-            File[] files = f.listFiles();
-            for (File inFile : files) {
-                if (inFile.isFile()) {
-                    Log.d("htdu87", inFile.getAbsolutePath());
-                    Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(inFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
-                    String fname = inFile.getAbsolutePath();
-                    fname = fname.substring(fname.lastIndexOf('.'));
-                    cardRowAdapter.add(new Song(0, inFile.getName(), fname, inFile.getAbsolutePath(),thumbnail, SONG_FORMAT.VOB));
-                    count++;
+        if(Environment.MEDIA_MOUNTED.equals(sdcardState)) {
+            File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/karaoke");
+            if (f.exists()) {
+                File[] files = f.listFiles();
+                for (File inFile : files) {
+                    if (inFile.isFile()) {
+                        Log.d("htdu87", inFile.getAbsolutePath());
+                        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(inFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+                        String fname = inFile.getAbsolutePath();
+                        fname = fname.substring(fname.lastIndexOf('.'));
+                        cardRowAdapter.add(new Song(0, inFile.getName(), fname, inFile.getAbsolutePath(), thumbnail, SONG_FORMAT.VOB));
+                        count++;
+                    }
                 }
+            } else {
+                Log.d("htdu87", "Folder not exists");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Folder not exists")
+                        .setMessage("Karaoke source folder not exist")
+                        .setPositiveButton("OK",null)
+                        .create().show();
             }
-        } else {
-            Log.d("htdu87", "Folder not exists");
+        }else{
+            Log.d("htdu87", "External Storage Error: "+Environment.MEDIA_MOUNTED);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("External Storage Error")
+                    .setMessage(Environment.MEDIA_MOUNTED)
+                    .setPositiveButton("OK",null)
+                    .create().show();
         }
         mRowsAdapter.add(new ListRow(cardItemPresenterHeader, cardRowAdapter));
         mRowsAdapter.notifyArrayItemRangeChanged(1, count);
