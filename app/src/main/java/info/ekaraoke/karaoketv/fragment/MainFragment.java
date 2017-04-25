@@ -1,9 +1,19 @@
 package info.ekaraoke.karaoketv.fragment;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v17.leanback.app.BrowseFragment;
 
@@ -19,10 +29,14 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowHeaderPresenter;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.io.File;
 
 import info.ekaraoke.karaoketv.R;
 import info.ekaraoke.karaoketv.activity.SingActivity;
@@ -53,6 +67,40 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
         setOnItemViewClickedListener(this);
     }
 
+
+    public void requestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d("htdu87",permissions[0]);
+        if(requestCode==1504 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            loadSong();
+        }
+    }
+
+    private void loadSong(){
+        HeaderItem cardItemPresenterHeader = new HeaderItem(1, "Video karaoke");
+        CardPresenter mCardPresenter = new CardPresenter();
+        ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(mCardPresenter);
+
+        int count = 0;
+        File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/karaoke");
+        if (f.exists()) {
+            File[] files = f.listFiles();
+            for (File inFile : files) {
+                if (inFile.isFile()) {
+                    Log.d("htdu87", inFile.getAbsolutePath());
+                    Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(inFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+                    String fname = inFile.getAbsolutePath();
+                    fname = fname.substring(fname.lastIndexOf('.'));
+                    cardRowAdapter.add(new Song(0, inFile.getName(), fname, inFile.getAbsolutePath(),thumbnail, SONG_FORMAT.VOB));
+                    count++;
+                }
+            }
+        } else {
+            Log.d("htdu87", "Folder not exists");
+        }
+        mRowsAdapter.add(new ListRow(cardItemPresenterHeader, cardRowAdapter));
+        mRowsAdapter.notifyArrayItemRangeChanged(1, count);
+    }
+
     private void setupUIElement(){
         setTitle(getString(R.string.app_name));
         setHeadersState(HEADERS_ENABLED);
@@ -62,27 +110,21 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
     }
 
     private void loadRows(){
-        String path1 = Environment.getExternalStorageDirectory().getPath()+"/Nhu-Quynh-Con-Thuong-Rau-Dang-Moc-Sau-He.vob";
-        String path2 = Environment.getExternalStorageDirectory().getPath()+"/Che-Linh-Ke-O-Mien-Xa.vob";
-        String path3 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/5. Còn Thương Rau Đăng Mọc Sau Hè - Như Quỳnh.vob";
-
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-        HeaderItem gridItemPresenterHeader = new HeaderItem(0,"GridItemPresenter");
+        HeaderItem gridItemPresenterHeader = new HeaderItem(0, "GridItemPresenter");
         GridItemPresenter mGirdPresenter = new GridItemPresenter();
         ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGirdPresenter);
         gridRowAdapter.add("ITEM 1");
         gridRowAdapter.add("ITEM 2");
         gridRowAdapter.add("ITEM 3");
-        mRowsAdapter.add(new ListRow(gridItemPresenterHeader,gridRowAdapter));
+        mRowsAdapter.add(new ListRow(gridItemPresenterHeader, gridRowAdapter));
 
-        HeaderItem cardItemPresenterHeader = new HeaderItem(1,"CardPresenter");
-        CardPresenter mCardPresenter = new CardPresenter();
-        ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(mCardPresenter);
-        cardRowAdapter.add(new Song(0,"Còn thương rau đắng mọc sau hè","Nắng hạ đi mây trôi lang thang cho hạ...",path1, SONG_FORMAT.VOB));
-        cardRowAdapter.add(new Song(1,"Kẻ ở miền xa","Tôi ở miền xa trời quen đất lạ nhiều đông lắm hạ...",path2, SONG_FORMAT.VOB));
-        cardRowAdapter.add(new Song(2,"Cả nhà thương nhau","Cha thương con vì con giống mẹ...",path3, SONG_FORMAT.MID));
-        mRowsAdapter.add(new ListRow(cardItemPresenterHeader,cardRowAdapter));
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1504);
+        }else {
+            loadSong();
 
+        }
         setAdapter(mRowsAdapter);
     }
 

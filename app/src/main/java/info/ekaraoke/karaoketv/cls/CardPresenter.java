@@ -1,6 +1,8 @@
 package info.ekaraoke.karaoketv.cls;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.ImageCardView;
@@ -45,6 +47,7 @@ public class CardPresenter extends Presenter {
         public Drawable getDefaulCardImage(){
             return mDefaulCardImage;
         }
+
     }
 
     @Override
@@ -66,7 +69,8 @@ public class CardPresenter extends Presenter {
         ((ViewHolder)viewHolder).mCardView.setTitleText(song.getName());
         ((ViewHolder)viewHolder).mCardView.setContentText(song.getLyrics());
         ((ViewHolder)viewHolder).mCardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
-        ((ViewHolder)viewHolder).mCardView.setMainImage(((ViewHolder)viewHolder).getDefaulCardImage());
+        //((ViewHolder)viewHolder).mCardView.setMainImage(((ViewHolder)viewHolder).getDefaulCardImage());
+        ((ViewHolder)viewHolder).mCardView.setMainImage(new BitmapDrawable(mContext.getResources(),song.getThumbnail()));
     }
 
     @Override

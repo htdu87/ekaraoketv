@@ -1,5 +1,7 @@
 package info.ekaraoke.karaoketv.cls;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,15 +17,17 @@ public class Song implements Parcelable {
     private String lyrics;
     private String path;
     private SONG_FORMAT format;
+    private Bitmap thumbnail;
 
     public Song(){}
 
-    public Song(long id, String name, String lyrics, String path, SONG_FORMAT format){
+    public Song(long id, String name, String lyrics, String path, Bitmap thumbnail, SONG_FORMAT format){
         this.id=id;
         this.name=name;
         this.format=format;
         this.path=path;
         this.lyrics=lyrics;
+        this.thumbnail=thumbnail;
     }
 
     public long getId() {
@@ -66,6 +70,14 @@ public class Song implements Parcelable {
         this.format = format;
     }
 
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -78,6 +90,7 @@ public class Song implements Parcelable {
         dest.writeString(this.lyrics);
         dest.writeString(this.path);
         dest.writeInt(this.format == null ? -1 : this.format.ordinal());
+        dest.writeParcelable(this.thumbnail, flags);
     }
 
     protected Song(Parcel in) {
@@ -87,9 +100,10 @@ public class Song implements Parcelable {
         this.path = in.readString();
         int tmpFormat = in.readInt();
         this.format = tmpFormat == -1 ? null : SONG_FORMAT.values()[tmpFormat];
+        this.thumbnail = in.readParcelable(Bitmap.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
+    public static final Creator<Song> CREATOR = new Creator<Song>() {
         @Override
         public Song createFromParcel(Parcel source) {
             return new Song(source);

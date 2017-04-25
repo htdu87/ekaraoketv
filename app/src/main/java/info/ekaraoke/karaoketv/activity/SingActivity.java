@@ -250,17 +250,18 @@ public class SingActivity extends Activity implements IVLCVout.Callback {
         Log.d("htdu87","Audio track count: "+count);
         Log.d("htdu87","Current audio track: "+curr);
 
-        if(curr+1<count)
-            mediaPlayer.setAudioTrack(curr+1);
-        else
+        if(curr+1<count) {
+            Log.d("htdu87","Setting audio track to: "+(curr+1));
+            mediaPlayer.setAudioTrack(curr + 1);
+        }
+        else {
+            Log.d("htdu87","Setting audio track to: 1");
             mediaPlayer.setAudioTrack(1);
+        }
 
         Log.d("htdu87","-----------------------");
         Log.d("htdu87","Current audio track: "+mediaPlayer.getAudioTrack());
 
-        /*for (MediaPlayer.TrackDescription audioTrack : mediaPlayer.getAudioTracks()) {
-            Log.d("htdu87", "Audio track name: "+audioTrack.name);
-            Log.d("htdu87", "Audio track ID: "+audioTrack.id);
-        }*/
+
     }
 }
