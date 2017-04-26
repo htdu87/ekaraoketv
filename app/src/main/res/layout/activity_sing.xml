@@ -23,9 +23,15 @@
             android:layout="@layout/subtitles_surface"
             android:id="@+id/subtitles_stub" />
     </FrameLayout>
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:onClick="btnClick"/>
+        android:onClick="btnClick"/>-->
+    <fragment
+        android:id="@+id/playback_controls_fragment"
+        android:name="info.ekaraoke.karaoketv.fragment.PlaybackOverlayFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </FrameLayout>

@@ -21,13 +21,14 @@ public class Song implements Parcelable {
 
     public Song(){}
 
-    public Song(long id, String name, String lyrics, String path, Bitmap thumbnail, SONG_FORMAT format){
+    public Song(long id, String name, String lyrics, String path, Bitmap thumbnail, SONG_FORMAT format, String sformat){
         this.id=id;
         this.name=name;
         this.format=format;
         this.path=path;
         this.lyrics=lyrics;
         this.thumbnail=thumbnail;
+        setStrFormat(sformat);
     }
 
     public long getId() {
@@ -76,6 +77,49 @@ public class Song implements Parcelable {
 
     public void setThumbnail(Bitmap thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public void setStrFormat(String sformat){
+        switch (sformat.toLowerCase()){
+            case "avi":
+                format= SONG_FORMAT.AVI;
+                break;
+            case "mkv":
+                format=SONG_FORMAT.MKV;
+                break;
+            case "mid":
+                format=SONG_FORMAT.MID;
+                break;
+            case "mp3":
+                format= SONG_FORMAT.MP3;
+                break;
+            case "mp4":
+                format=SONG_FORMAT.MP4;
+                break;
+            case "vob":
+                format=SONG_FORMAT.VOB;
+                break;
+            default:
+                format=SONG_FORMAT.UNKNOW;
+        }
+    }
+
+    public String getStrFormat(){
+        switch (format){
+            case AVI:
+                return "AVI";
+            case MKV:
+                return "MKV";
+            case MID:
+                return "MID";
+            case MP3:
+                return "MP3";
+            case MP4:
+                return "MP4";
+            case VOB:
+                return "VOB";
+        }
+        return "UNKNOW";
     }
 
     @Override

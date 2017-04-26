@@ -244,7 +244,7 @@ public class SingActivity extends Activity implements IVLCVout.Callback {
             subtitlesSurface.invalidate();
     }
 
-    public void btnClick(View v){
+    public void audioTrackToggle(){
         int count = mediaPlayer.getAudioTracksCount();
         int curr = mediaPlayer.getAudioTrack();
         Log.d("htdu87","Audio track count: "+count);
@@ -261,7 +261,21 @@ public class SingActivity extends Activity implements IVLCVout.Callback {
 
         Log.d("htdu87","-----------------------");
         Log.d("htdu87","Current audio track: "+mediaPlayer.getAudioTrack());
+    }
 
+    public void Pause(){
+        mediaPlayer.pause();
+    }
 
+    public void Play(){
+        mediaPlayer.play();
+    }
+
+    public int getState(){
+        return mediaPlayer.getPlayerState();
+    }
+
+    public int getLength(){
+        return (int) mediaPlayer.getLength();
     }
 }

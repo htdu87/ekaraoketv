@@ -40,6 +40,7 @@ import android.widget.TextView;
 import java.io.File;
 
 import info.ekaraoke.karaoketv.R;
+import info.ekaraoke.karaoketv.activity.PlaybackOverlayActivity;
 import info.ekaraoke.karaoketv.activity.SingActivity;
 import info.ekaraoke.karaoketv.cls.CardPresenter;
 import info.ekaraoke.karaoketv.cls.SimpleBackgroundManager;
@@ -93,7 +94,7 @@ public class MainFragment extends BrowseFragment implements OnItemViewSelectedLi
                         Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(inFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
                         String fname = inFile.getAbsolutePath();
                         fname = fname.substring(fname.lastIndexOf('.'));
-                        cardRowAdapter.add(new Song(0, inFile.getName(), fname, inFile.getAbsolutePath(), thumbnail, SONG_FORMAT.VOB));
+                        cardRowAdapter.add(new Song(0, inFile.getName(), fname, inFile.getAbsolutePath(), thumbnail, SONG_FORMAT.VOB, fname.substring(1)));
                         count++;
                     }
                 }
